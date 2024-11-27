@@ -1,5 +1,5 @@
 
-def matrix_order_mod2(C):
+def matrix_order(C):
     """
     Compute the order of a matrix modulo 2.
 
@@ -28,32 +28,6 @@ def matrix_order_mod2(C):
     else:
         return -1  # Indicates no finite order found within the iteration limit
 
-# Function to compute the companion matrix of a polynomial
-def companion_matrix(poly):
-    """
-    Construct the companion matrix for a given monic polynomial over GF(2).
-    
-    Args:
-        poly (Polynomial): The polynomial in GF(2)[x].
-    
-    Returns:
-        Matrix: The companion matrix.
-    """
-    coeffs = poly.coefficients(sparse=False)  # Get coefficients [a_0, ..., a_n]
-    degree = poly.degree()
-    
-    # Create an (n x n) companion matrix
-    rows = []
-    for i in range(degree):
-        row = [0] * degree
-        if i < degree - 1:
-            row[i + 1] = 1  # 1 on the superdiagonal
-        else:
-            row = [F(c) for c in coeffs[:-1]]  # Last row is the coefficients
-        rows.append(row)
-    
-    return Matrix(F, rows)
-
 # Define the finite field GF(2)
 F = GF(2)
 
@@ -70,7 +44,7 @@ C1 = Matrix(F, 8, 8, [
 ])
 
 # Call the function to compute the order modulo 2
-order1 = matrix_order_mod2(C1)
+order1 = matrix_order(C1)
 
 # Print the result
 print("The order of the matrix C1:")
@@ -86,7 +60,7 @@ C2 = Matrix(F, 6, 6, [
     0, 0, 0, 0, 1, 0,
 ])
 
-order2 = matrix_order_mod2(C2)
+order2 = matrix_order(C2)
 
 # Print the result for C2
 print("The order of the matrix C2:")
@@ -106,13 +80,27 @@ factors1 = f1.factor()
 print(f"The factorization of {f1} over GF(2) is:")
 print(factors1)
 
-print("The orders of the companion matrices are:")
+print("The orders of the state matrices are:")
 # Convert each factor into a companion matrix
-for factor, multiplicity in factors1:
-    if multiplicity == 1:  # Only process factors appearing once
-        C = companion_matrix(factor)
-        print(C)
-        print(matrix_order_mod2(C))
+F1 = Matrix(F, 2, 2, [
+    0, 1,
+    1, 1,
+])
+order_F1 = matrix_order(F1)
+print("The order of the first factor")
+print(order_F1)
+
+F2 = Matrix(F, 6, 6, [
+    0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 0,
+    0, 1, 0, 0, 0, 0,
+    0, 0, 1, 0, 0, 0,
+    0, 0, 0, 1, 0, 1,
+    0, 0, 0, 0, 1, 1,
+])
+order_F2 = matrix_order(F2)
+print("The order of the second factor")
+print(order_F2)
 
 # Define a polynomial 2
 f2 = x^6 + x^3 + 1
@@ -122,14 +110,9 @@ factors2 = f2.factor()
 
 # Print the result for polynomial 2
 print(f"The factorization of {f2} over GF(2) is:")
-print(factors2)
+print(factors2) 
 
-print("The orders of the companion matrices are:")
-# Convert each factor into a companion matrix
-for factor, multiplicity in factors2:
-    if multiplicity == 1:  # Only process factors appearing once
-        C = companion_matrix(factor)
-        print(matrix_order_mod2(C))
+print("The polynomial is irreducible, so we cannot factorize so the order of the factors are the same.")
 
 
 
