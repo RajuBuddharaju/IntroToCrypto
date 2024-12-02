@@ -1,5 +1,3 @@
-import multiprocessing
-
 def rc4_key_schedule(key):
     """
     RC4 key scheduling algorithm.
@@ -20,9 +18,12 @@ def rc4_generate_keystream(S, n):
     for _ in range(n):
         i = (i + 1) % 256
         j = (j + S[i]) % 256
-        if (i == j): print(_)
         S = swap(S, i, j)
         keystream.append(S[(S[i] + S[j]) % 256])
+        if (i == j):
+            print("Iteration:", _)
+            print("XOR Swap:", keystream)
+            break;  
     return keystream
 
 def rc4_key_schedule_paws(key):
@@ -47,6 +48,9 @@ def rc4_generate_keystream_paws(S, n):
         j = (j + S[i]) % 256
         S[i], S[j] = paws(S[i], S[j])
         keystream.append(S[(S[i] + S[j]) % 256])
+        if (i == j):
+            print("Dummy Swap:", keystream)
+            break; 
     return keystream
 
 def swap(S, i, j):
@@ -70,12 +74,14 @@ def arrays_equal(arr1, arr2):
     return True
 
 
+temp = [0 ,1, 2, 3, 4, 5]
+print("Original Key:", temp)
 
-key = rc4_key_schedule([0, 8, 4, 3, 10, 255, 255])
+key = rc4_key_schedule(temp)
 keystream = rc4_generate_keystream(key, 255)
 
 
-key1 = rc4_key_schedule_paws([0, 8, 4, 3, 10, 255, 255])
+key1 = rc4_key_schedule_paws(temp)
 keystream1 = rc4_generate_keystream_paws(key1, 255)
 
-print(arrays_equal(keystream, keystream1))
+print("The streams are equal:",arrays_equal(keystream, keystream1))
