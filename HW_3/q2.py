@@ -45,8 +45,6 @@ def rc4_generate_keystream_paws(S, n):
     for _ in range(n):
         i = (i + 1) % 256
         j = (j + S[i]) % 256
-        if (i == j): print(_)
-
         S[i], S[j] = paws(S[i], S[j])
         keystream.append(S[(S[i] + S[j]) % 256])
     return keystream
@@ -73,11 +71,11 @@ def arrays_equal(arr1, arr2):
 
 
 
-key = rc4_key_schedule([0, 8, 4, 25, 10, 25, 2])
-keystream = rc4_generate_keystream(key, 25)
+key = rc4_key_schedule([0, 8, 4, 3, 10, 255, 255])
+keystream = rc4_generate_keystream(key, 255)
 
 
-key1 = rc4_key_schedule_paws([0, 8, 4, 25, 10, 25, 2])
-keystream1 = rc4_generate_keystream_paws(key1, 25)
+key1 = rc4_key_schedule_paws([0, 8, 4, 3, 10, 255, 255])
+keystream1 = rc4_generate_keystream_paws(key1, 255)
 
 print(arrays_equal(keystream, keystream1))
